@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mole - Mac bereinigen & schneller machen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Chicago:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --platinum: #c0c0c0;
+            --dark-platinum: #a0a0a0;
+            --window-bg: #dddddd;
+            --border-dark: #404040;
+            --border-light: #ffffff;
+            --accent: #000080;
+            --text: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'VT323', 'Chicago', 'Charcoal', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        /* Classic Mac Window */
+        .mac-window {
+            background: var(--window-bg);
+            border: 2px solid var(--border-dark);
+            border-radius: 8px 8px 0 0;
+            box-shadow:
+                inset 1px 1px 0 var(--border-light),
+                inset -1px -1px 0 var(--dark-platinum),
+                4px 4px 10px rgba(0,0,0,0.3);
+            margin: 0 auto 30px;
+            max-width: 900px;
+        }
+
+        .title-bar {
+            background: linear-gradient(180deg, #8e8e8e 0%, #6e6e6e 50%, #8e8e8e 100%);
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dark);
+            border-radius: 6px 6px 0 0;
+        }
+
+        .window-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .btn-close { background: #ff5f57; }
+        .btn-min { background: #ffbd2e; }
+        .btn-max { background: #28ca42; }
+
+        .title-text {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #000;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        }
+
+        .window-content {
+            padding: 30px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--text);
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 24px;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Retro Button */
+        .btn-retro {
+            display: inline-block;
+            background: linear-gradient(180deg, #ffffff 0%, #c0c0c0 100%);
+            border: 2px outset #d0d0d0;
+            padding: 15px 40px;
+            font-family: inherit;
+            font-size: 24px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+            margin: 10px;
+            transition: all 0.1s;
+        }
+
+        .btn-retro:hover {
+            background: linear-gradient(180deg, #e0e0e0 0%, #a0a0a0 100%);
+        }
+
+        .btn-retro:active {
+            border-style: inset;
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .feature-box {
+            background: #f5f5f5;
+            border: 2px inset #c0c0c0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .feature-box h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .feature-box p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Pricing */
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .price-card {
+            background: #fff;
+            border: 3px solid #000;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .price-card.popular {
+            border-color: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: #fff;
+            padding: 5px 20px;
+            font-size: 14px;
+        }
+
+        .price-card h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .price span {
+            font-size: 20px;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .price-features li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+            font-size: 18px;
+        }
+
+        .price-features li::before {
+            content: "✓ ";
+            color: #28ca42;
+        }
+
+        .price-features li.no::before {
+            content: "✗ ";
+            color: #ff5f57;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px;
+            background: #f0f0f0;
+            border: 2px inset #c0c0c0;
+            margin: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Terminal Preview */
+        .terminal {
+            background: #1e1e1e;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .terminal-header {
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .prompt { color: #00aaff; }
+        .command { color: #fff; }
+        .output { color: #00ff00; }
+        .highlight-term { color: #ffff00; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        footer a {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .tagline { font-size: 18px; }
+            .logo { font-size: 60px; }
+            .pricing { grid-template-columns: 1fr; }
+            .price-card.popular { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Window -->
+    <div class="mac-window">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">Mole - Mac Cleaner</div>
+        </div>
+        <div class="window-content hero">
+            <div class="logo">🧹</div>
+            <h1>MOLE</h1>
+            <p class="tagline">Dein Mac. <span class="highlight">Blitzschnell.</span> Wieder.</p>
+            <p style="font-size: 20px; margin-bottom: 30px; color: #666;">
+                Bereinige Gigabytes an Datenmüll. Deinstalliere Apps komplett.<br>
+                Analysiere deinen Speicher. Alles in einem Tool.
+            </p>
+            <a href="#pricing" class="btn-retro btn-primary">Jetzt herunterladen</a>
+            <a href="#features" class="btn-retro">Mehr erfahren</a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="mac-window">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">Statistiken</div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number">20K+</div>
+                <div class="stat-label">GitHub Stars</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">50GB+</div>
+                <div class="stat-label">Durchschnittlich befreit</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Made in Germany</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">1 Min</div>
+                <div class="stat-label">Installation</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Window -->
+    <div class="mac-window" id="features">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">Features</div>
+        </div>
+        <div class="features">
+            <div class="feature-box">
+                <div class="feature-icon">🗑️</div>
+                <h3>Deep Cleaning</h3>
+                <p>Entfernt Caches, Logs, Browser-Daten und temporäre Dateien. Gewinne Gigabytes zurück!</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📦</div>
+                <h3>App Uninstaller</h3>
+                <p>Deinstalliert Apps KOMPLETT - inkl. versteckter Dateien, Preferences & Launch Agents.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📊</div>
+                <h3>Disk Analyzer</h3>
+                <p>Visualisiert was deinen Speicher frisst. Finde die größten Platzfresser sofort.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⚡</div>
+                <h3>System Optimizer</h3>
+                <p>Rebuild Datenbanken, leere DNS-Cache, räume RAM auf. Mac wie neu!</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">👨‍💻</div>
+                <h3>Developer Cleanup</h3>
+                <p>Räumt node_modules, target/, build/ und andere Dev-Artifacts auf.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📈</div>
+                <h3>Live Monitoring</h3>
+                <p>Echtzeit CPU, RAM, Disk & Network Stats. Wie Activity Monitor, nur besser.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Preview -->
+    <div class="mac-window">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">Terminal - So einfach geht's</div>
+        </div>
+        <div class="terminal">
+            <div class="terminal-header"># Installation (1 Befehl)</div>
+            <span class="prompt">$</span> <span class="command">curl -fsSL https://mole.sh/install | bash</span>
+            <br><br>
+            <div class="terminal-header"># Deep Clean starten</div>
+            <span class="prompt">$</span> <span class="command">mole clean</span>
+            <br>
+            <span class="output">
+            🔍 Scanning...<br>
+            📁 Found: 847 cache files (12.4 GB)<br>
+            📁 Found: 234 log files (3.2 GB)<br>
+            📁 Found: 12 old iOS backups (45.6 GB)<br>
+            <br>
+            <span class="highlight-term">✨ Total recoverable: 61.2 GB</span><br>
+            <br>
+            Clean now? [Y/n]: <span class="command">Y</span><br>
+            <span class="highlight-term">✓ Cleaned! 61.2 GB freed in 23 seconds</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Pricing Window -->
+    <div class="mac-window" id="pricing">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">Preise</div>
+        </div>
+        <div class="pricing">
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price">€0</div>
+                <ul class="price-features">
+                    <li>Basis-Scan & Report</li>
+                    <li>1x Cleanup pro Tag</li>
+                    <li>CLI Tool</li>
+                    <li class="no">Automatische Cleanups</li>
+                    <li class="no">GUI App</li>
+                    <li class="no">Priority Support</li>
+                </ul>
+                <a href="#" class="btn-retro">Download Free</a>
+            </div>
+            <div class="price-card popular">
+                <div class="popular-badge">BELIEBT</div>
+                <h3>Pro</h3>
+                <div class="price">€29<span> einmalig</span></div>
+                <ul class="price-features">
+                    <li>Alles aus Free</li>
+                    <li>Unbegrenzte Cleanups</li>
+                    <li>GUI App mit 1-Click Clean</li>
+                    <li>Automatische Schedules</li>
+                    <li>Lifetime Updates</li>
+                    <li>E-Mail Support</li>
+                </ul>
+                <a href="#" class="btn-retro btn-primary">Jetzt kaufen</a>
+            </div>
+            <div class="price-card">
+                <h3>Team</h3>
+                <div class="price">€99<span> /Jahr</span></div>
+                <ul class="price-features">
+                    <li>Alles aus Pro</li>
+                    <li>Bis zu 10 Macs</li>
+                    <li>Zentrale Verwaltung</li>
+                    <li>Nutzungsstatistiken</li>
+                    <li>Priority Support</li>
+                    <li>Custom Branding</li>
+                </ul>
+                <a href="#" class="btn-retro">Kontakt</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mac-window">
+        <div class="title-bar">
+            <div class="window-buttons">
+                <div class="window-btn btn-close"></div>
+                <div class="window-btn btn-min"></div>
+                <div class="window-btn btn-max"></div>
+            </div>
+            <div class="title-text">FAQ</div>
+        </div>
+        <div class="window-content">
+            <div class="feature-box" style="margin-bottom: 15px;">
+                <h3>Ist Mole sicher?</h3>
+                <p>Ja! Mole ist Open Source (MIT Lizenz) mit 20.000+ GitHub Stars. Der Code ist transparent und wird von der Community geprüft.</p>
+            </div>
+            <div class="feature-box" style="margin-bottom: 15px;">
+                <h3>Welche macOS Versionen werden unterstützt?</h3>
+                <p>macOS 11 (Big Sur) und neuer. Sowohl Intel als auch Apple Silicon (M1/M2/M3).</p>
+            </div>
+            <div class="feature-box" style="margin-bottom: 15px;">
+                <h3>Was ist der Unterschied zu CleanMyMac?</h3>
+                <p>Mole ist schneller, leichter (5MB vs 100MB+), Open Source und deutlich günstiger. Einmal zahlen, für immer nutzen.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Kann ich mein Geld zurückbekommen?</h3>
+                <p>Ja, 30 Tage Geld-zurück-Garantie. Keine Fragen.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ in Germany | <a href="https://github.com/tw93/Mole">GitHub</a> | <a href="#">Impressum</a> | <a href="#">Datenschutz</a></p>
+        <p style="margin-top: 10px; font-size: 14px;">© 2025 Mole App. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
